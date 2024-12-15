@@ -1,0 +1,40 @@
+namespace: nextcloud
+timezone: Europe/Stockholm
+
+nextcloud:
+  replicas: 1
+  image: nextcloud
+  tag: 30.0.4-apache
+  pullPolicy: IfNotPresent
+  persistence:
+    enabled: true
+    html:
+      storage: 5Gi
+      accessModes: 
+        - ReadWriteMany
+      storageClass: ""  # If not provided, the default will be used
+    config:
+      storage: 1Gi
+      accessModes:
+        - ReadWriteMany
+      storageClass: ""  # If not provided, the default will be used
+    apps:
+      storage: 1Gi
+      accessModes:
+        - ReadWriteMany
+      storageClass: ""  # If not provided, the default will be used
+    data:
+      storageClass: nfs-nextcloud 
+      storage: 150Gi
+      accessModes:
+        - ReadWriteMany
+
+mariadb:
+  enabled: true
+  image: mariadb
+  tag: 11.6.2
+
+redis:
+  enabled: true
+  image: redis
+  tag: 7.4.1

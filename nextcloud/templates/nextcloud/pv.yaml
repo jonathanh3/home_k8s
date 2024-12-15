@@ -1,0 +1,21 @@
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: nextcloud-data
+  namespace: {{ .Values.namespace }}
+spec:
+  storageClassName: {{ .Values.nextcloud.persistence.data.storageClass }}
+  capacity:
+    storage: {{ .Values.nextcloud.persistence.data.storage }}
+  volumeMode: Filesystem
+  accessModes: 
+    {{- range .Values.nextcloud.persistence.data.accessModes }}
+    - {{ . }}
+    {{- end }}
+  persistentVolumeReclaimPolicy: Retain
+  nfs:
+    server: {{ .Values.nextcloud.persistence.data.pv.nfs }}
+    path: {{ .Values.nextcloud.persistence.data.pv.path }}
+  mountOptions:
+    - hard
+    - nfsvers=4

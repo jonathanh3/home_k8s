@@ -1,0 +1,52 @@
+{{- if .Values.mariadb.enabled }}
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mariadb
+  namespace: {{ .Values.namespace }}
+spec:
+  serviceName: mariadb
+  replicas: {{ .Values.mariadb.replicas }}
+  selector:
+    matchLabels:
+      app: mariadb
+  template:
+    metadata:
+      labels:
+        app: mariadb
+    spec:
+      containers:
+        - name: mariadb
+          image: "{{ .Values.mariadb.image}}:{{ .Values.mariadb.tag }}"
+          env:
+          - name: MYSQL_ROOT_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: nextcloud-secrets
+                key: mysql_root_password
+          - name: MYSQL_DATABASE
+            value: nextcloud
+          - name: MYSQL_USER
+            valueFrom:
+              secretKeyRef:
+                name: nextcloud-secrets
+                key: mysql_admin_user
+          - name: MYSQL_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: nextcloud-secrets
+                key: mysql_admin_password
+          ports:
+            - containerPort: 3306
+          volumeMounts:
+            - name: mariadb-data
+              mountPath: /var/lib/mysql
+  volumeClaimTemplates:
+    - metadata:
+        name: mariadb-data
+      spec:
+        accessModes: ['ReadWriteOnce']
+        resources:
+          requests:
+            storage: 500Mi
+{{- end }}

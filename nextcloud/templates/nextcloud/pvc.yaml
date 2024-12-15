@@ -1,0 +1,59 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: nextcloud-html
+  namespace: {{ .Values.namespace }}
+spec:
+  accessModes: 
+    {{- range .Values.nextcloud.persistence.html.accessModes }}
+    - {{ . }}
+    {{- end }}
+  resources:
+    requests:
+      storage: {{ .Values.nextcloud.persistence.html.storage }}
+  storageClassName: {{ .Values.nextcloud.persistence.html.storageClass | default "" }}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: nextcloud-config
+  namespace: {{ .Values.namespace }}
+spec:
+  accessModes: 
+    {{- range .Values.nextcloud.persistence.config.accessModes }}
+    - {{ . }}
+    {{- end }}
+  resources:
+    requests:
+      storage: {{ .Values.nextcloud.persistence.config.storage }}
+  storageClassName: {{ .Values.nextcloud.persistence.config.storageClass | default "" }}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: nextcloud-apps
+  namespace: {{ .Values.namespace }}
+spec:
+  accessModes: 
+    {{- range .Values.nextcloud.persistence.apps.accessModes }}
+    - {{ . }}
+    {{- end }}
+  resources:
+    requests:
+      storage: {{ .Values.nextcloud.persistence.apps.storage }}
+  storageClassName: {{ .Values.nextcloud.persistence.apps.storageClass | default "" }}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: nextcloud-data
+  namespace: {{ .Values.namespace }}
+spec:
+  storageClassName: {{ .Values.nextcloud.persistence.data.storageClass | default "" }}
+  accessModes: 
+    {{- range .Values.nextcloud.persistence.data.accessModes }}
+    - {{ . }}
+    {{- end }}
+  resources:
+    requests:
+      storage: {{ .Values.nextcloud.persistence.data.storage }}
